@@ -45,7 +45,7 @@ Since VectorGen is a **Single-File Application**, no installation or server is r
 1.  Fork or Clone this repository.
 2.  Go to **Settings** > **Pages**.
 3.  Select `main` branch as source.
-4.  Your app will be live at `https://yourusername.github.io/VectorGen`.
+4.  Your app will be live at `https://macchant.github.io/VectorGen`.
 
 ---
 
@@ -73,5 +73,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ---
 
 <div align="center">
-  <sub>Built with 💠 by [Your Name]</sub>
+  <sub>Built with 💠 by [macchant]</sub>
 </div>
