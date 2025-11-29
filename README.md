@@ -1,10 +1,11 @@
 # VectorGen // SYSTEM_V6
 
-![Version](https://img.shields.io/badge/version-v6.0-cyan?style=for-the-badge)
-![Status](https://img.shields.io/badge/status-OPERATIONAL-green?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
+[![Live Demo](https://img.shields.io/badge/DEMO-VISIT%20SITE-22d3ee?style=for-the-badge&logo=vercel&logoColor=white)](https://vectorgen-sepia.vercel.app/)
 
-**VectorGen** is a professional-grade, client-side AI prompt architect designed specifically for creating clean Vector Art, Stickers, and T-Shirt designs.
+![Version](https://img.shields.io/badge/version-v6.0-blue?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+
+**VectorGen** is a professional-grade AI prompt architect...
 
 It features a **Sci-Fi Tactical UI** inspired by Arknights and Genshin Impact, providing a visually immersive experience while generating optimized prompts for Midjourney, Ideogram, Leonardo, and Flux.
 
