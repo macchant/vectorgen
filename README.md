@@ -9,8 +9,6 @@
 
 It features a **Sci-Fi Tactical UI** inspired by Arknights and Genshin Impact, providing a visually immersive experience while generating optimized prompts for Midjourney, Ideogram, Leonardo, and Flux.
 
-![Screenshot Placeholder]()
-
 ---
 
 ## ⚡ Core Modules
