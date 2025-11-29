@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VectorGen // SYSTEM_FINAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CORE AESTHETICS --- */
+        :root {
+            --void-dark: #0f1219;
+            --panel-bg: rgba(22, 27, 40, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-gold: #fbbf24;
+            --accent-cyan: #22d3ee;
+            --text-main: #f1f5f9;
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: var(--void-dark); 
+            color: var(--text-main);
+            /* Sci-fi Grid Background */
+            background-image: 
+                linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* --- UI COMPONENTS --- */
+        
+        /* Glass Panels */
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Model Cards */
+        .model-card {
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.02);
+        }
+        .model-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); }
+        
+        /* ACTIVE STATE */
+        .model-card.active {
+            border-color: var(--accent-gold);
+            background: rgba(251, 191, 36, 0.1);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.1);
+        }
+        .model-card.active i { color: var(--accent-gold); }
+
+        /* Tag Buttons (Bigger & Readable) */
+        .tag-btn {
+            font-size: 0.9rem; /* Bigger text */
+            padding: 12px 16px; /* Bigger click area */
+            border: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.4);
+            transition: all 0.2s;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .tag-btn:hover { border-color: var(--accent-cyan); color: white; background: rgba(34, 211, 238, 0.1); }
+        .tag-btn.active {
+            background: rgba(34, 211, 238, 0.2);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.2);
+            font-weight: 700;
+        }
+
+        /* Headers */
+        .deco-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem; /* Readable size */
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+        .deco-header::after {
+            content: ''; height: 2px; flex: 1; background: rgba(34, 211, 238, 0.2);
+        }
+
+        /* Inputs */
+        .tech-input {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            color: white;
+            transition: all 0.3s;
+            font-size: 1rem; /* Readable input size */
+        }
+        .tech-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.1);
+            background: rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="h-dvh flex flex-col overflow-hidden">
+
+    <header class="flex-none glass-panel border-b-0 border-b border-white/5 px-6 py-4 flex justify-between items-center z-50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 flex items-center justify-center bg-cyan-500/10 rounded-lg border border-cyan-500/30">
+                <i class="ph-bold ph-asterisk text-cyan-400 text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-xl tracking-wide text-white leading-none">VECTOR<span class="text-cyan-400">GEN</span></h1>
+                <p class="font-mono text-xs text-slate-400 mt-1">SYSTEM_V6 // READY</p>
+            </div>
+        </div>
+        
+        <button onclick="location.reload()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-xs font-mono text-cyan-400 transition">
+            RESET_SYSTEM
+        </button>
+    </header>
+
+    <main class="flex-1 overflow-y-auto w-full relative scroll-smooth">
+        <div class="max-w-[1200px] mx-auto p-4 md:p-8 space-y-8">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <div class="lg:col-span-8 space-y-8">
+                    
+                    <section class="glass-panel p-6 rounded-xl">
+                        <div class="deco-header">01 // SELECT AI MODEL</div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button onclick="setModel('mj', this)" class="model-card active rounded-lg p-5 flex flex-col items-center gap-3 cursor-pointer">
+                                <i class="ph-duotone ph-boat text-3xl text-slate-400"></i>
+                                <span class="text-sm font-bold text-slate-200">MIDJOURNEY</span>
+                            </button>
+                            <button onclick="setModel('ideo', this)" class="model-card rounded-lg p-5 flex flex-col items-center gap-3 cursor-pointer">
+                                <i class="ph-duotone ph-text-t text-3xl text-slate-400"></i>
+                                <span class="text-sm font-bold text-slate-200">IDEOGRAM</span>
+                            </button>
+                            <button onclick="setModel('leo', this)" class="model-card rounded-lg p-5 flex flex-col items-center gap-3 cursor-pointer">
+                                <i class="ph-duotone ph-palette text-3xl text-slate-400"></i>
+                                <span class="text-sm font-bold text-slate-200">LEONARDO</span>
+                            </button>
+                            <button onclick="setModel('flux', this)" class="model-card rounded-lg p-5 flex flex-col items-center gap-3 cursor-pointer">
+                                <i class="ph-duotone ph-lightning text-3xl text-slate-400"></i>
+                                <span class="text-sm font-bold text-slate-200">FLUX / WHISK</span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="glass-panel p-6 rounded-xl">
+                        <div class="deco-header">02 // SUBJECT MATTER</div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 mb-2 uppercase">Core Concept</label>
+                                <textarea id="coreSubject" rows="2" placeholder="e.g. A cyberpunk samurai cat wearing neon armor..." 
+                                    class="tech-input w-full rounded-lg p-4 text-lg placeholder-slate-500 resize-none"></textarea>
+                            </div>
+                        
+                            <div id="ideogramInput" class="hidden pt-4 border-t border-white/10">
+                                <label class="block text-xs font-bold text-pink-400 mb-2 uppercase">Typography Text (Required for Ideogram)</label>
+                                <input type="text" id="textSubject" placeholder="e.g. SAMURAI" 
+                                    class="tech-input w-full rounded-lg p-4 text-base font-bold tracking-widest placeholder-slate-600">
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="glass-panel p-6 rounded-xl mb-6">
+                            <div class="deco-header">03 // ART STYLE</div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="styleContainer"></div>
+                        </div>
+                        
+                        <div class="glass-panel p-6 rounded-xl">
+                            <div class="deco-header">04 // LINEWORK & DETAIL</div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="lineContainer"></div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="lg:col-span-4 space-y-6">
+                    
+                    <div class="glass-panel p-6 rounded-xl">
+                        <div class="deco-header">CONFIG // RATIO</div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="setRatio('square', this)" class="ratio-btn active tag-btn rounded-lg flex flex-col items-center gap-2 py-4">
+                                <div class="w-5 h-5 border-2 border-current opacity-70"></div>
+                                <span class="text-xs">1:1</span>
+                            </button>
+                            <button onclick="setRatio('portrait', this)" class="ratio-btn tag-btn rounded-lg flex flex-col items-center gap-2 py-4">
+                                <div class="w-4 h-6 border-2 border-current opacity-70"></div>
+                                <span class="text-xs">2:3</span>
+                            </button>
+                            <button onclick="setRatio('landscape', this)" class="ratio-btn tag-btn rounded-lg flex flex-col items-center gap-2 py-4">
+                                <div class="w-6 h-4 border-2 border-current opacity-70"></div>
+                                <span class="text-xs">3:2</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-xl">
+                        <div class="deco-header">CONFIG // LAYOUT</div>
+                        <div class="flex flex-col gap-3">
+                            <button class="mode-btn active tag-btn w-full rounded-lg text-left flex justify-between items-center group" onclick="setMode('single', this)">
+                                <span>Single Item</span>
+                                <i class="ph-bold ph-square text-lg"></i>
+                            </button>
+                            <button class="mode-btn tag-btn w-full rounded-lg text-left flex justify-between items-center group" onclick="setMode('grid', this)">
+                                <span>Sticker Sheet (Grid)</span>
+                                <i class="ph-bold ph-squares-four text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-xl bg-cyan-950/30 border border-cyan-500/20">
+                        <div class="flex items-center gap-2 text-cyan-400 text-sm font-bold font-mono mb-2">
+                            <i class="ph-fill ph-info"></i> ACTIVE PROTOCOL
+                        </div>
+                        <p class="text-xs text-cyan-200 font-mono">> <span id="modelInfoTitle">Midjourney</span> selected.</p>
+                        <p id="modelInfoText" class="text-xs text-slate-400 mt-2 leading-relaxed">
+                            Parameters active: --ar, --s, --no. <br>
+                            Optimized for V6 Vector generation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="h-12"></div>
+        </div>
+    </main>
+
+    <footer class="flex-none bg-slate-900 border-t border-white/10 p-4 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+        <div class="max-w-[1200px] mx-auto flex gap-4 items-stretch h-20">
+            
+            <div class="flex-1 relative group bg-black/40 rounded-lg border border-white/10 overflow-hidden">
+                <textarea readonly id="finalOutput" 
+                    class="w-full h-full bg-transparent border-none text-cyan-100 font-mono text-sm resize-none focus:ring-0 p-4 leading-relaxed" 
+                    placeholder=">> WAITING FOR INPUT..."></textarea>
+                
+                <div class="absolute bottom-2 right-2 text-[10px] font-bold font-mono text-slate-500 uppercase">
+                    CHARS: <span id="charCount" class="text-cyan-400">0</span>
+                </div>
+            </div>
+            
+            <button id="copyBtn" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold w-32 rounded-lg flex flex-col items-center justify-center transition shadow-lg active:scale-95 group">
+                <i class="ph-bold ph-copy text-2xl mb-1 group-hover:scale-110 transition"></i>
+                <span class="text-xs tracking-widest font-mono">COPY</span>
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA ---
+        const data = {
+            styles: ["Flat Vector", "Kawaii Style", "Pop Art", "Vintage Emblem", "Japanese Woodblock", "Geometric Shapes", "Bauhaus Style", "Corporate Memphis", "Graffiti Sticker", "Psychedelic", "Minimalist Icon", "Clip Art", "80s Synthwave", "Chibi Character", "Line Art", "Stained Glass"],
+            linework: ["Thick Black Outlines", "White Boarders", "Monoline", "No Outlines", "Stippling", "Halftone Dots", "Solid Colors", "Clean Lines", "Detailed Hatching", "Sketchy Look"]
+        };
+
+        let state = { model: 'mj', tags: new Set(), mode: 'single', ratio: 'square' };
+
+        // --- INIT ---
+        const initCategory = (containerId, items) => {
+            const container = document.getElementById(containerId);
+            items.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = `tag-btn rounded-lg text-center truncate`;
+                btn.innerText = item;
+                btn.onclick = () => toggleTag(item, btn);
+                container.appendChild(btn);
+            });
+        };
+        initCategory('styleContainer', data.styles);
+        initCategory('lineContainer', data.linework);
+
+        // --- ACTIONS ---
+        function setModel(model, btn) {
+            state.model = model;
+            document.querySelectorAll('.model-card').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.getElementById('ideogramInput').style.display = (model === 'ideo') ? 'block' : 'none';
+            
+            const titles = { mj: "MIDJOURNEY", ideo: "IDEOGRAM", leo: "LEONARDO", flux: "FLUX / WHISK" };
+            const texts = {
+                mj: "Parameters active: --ar, --s, --no. Optimized for V6 Vector generation.",
+                ideo: "Typography engine active. Please enter text in the Subject field.",
+                leo: "Natural language mode. Removing syntactic flags for better Diffusion results.",
+                flux: "High fidelity mode. Using dense descriptors."
+            };
+            document.getElementById('modelInfoTitle').innerText = titles[model];
+            document.getElementById('modelInfoText').innerText = texts[model];
+            
+            generatePrompt();
+        }
+
+        function toggleTag(tag, btn) {
+            if (state.tags.has(tag)) {
+                state.tags.delete(tag);
+                btn.classList.remove('active');
+            } else {
+                state.tags.add(tag);
+                btn.classList.add('active');
+            }
+            generatePrompt();
+        }
+
+        function setRatio(r, btn) {
+            state.ratio = r;
+            document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            generatePrompt();
+        }
+
+        function setMode(m, btn) {
+            state.mode = m;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            generatePrompt();
+        }
+
+        function generatePrompt() {
+            const subject = document.getElementById('coreSubject').value.trim();
+            const textSubject = document.getElementById('textSubject').value.trim();
+            const tags = Array.from(state.tags).join(", ");
+            
+            let p = [];
+            
+            if (state.model === 'ideo' && textSubject) {
+                p.push(`sticker design with text "${textSubject}"`);
+                if (subject) p.push(`showing ${subject}`);
+            } else {
+                if (subject) p.push(subject);
+            }
+
+            if (state.mode === 'grid') {
+                p.push("knolling layout, sticker sheet, organized grid, white space");
+            } else {
+                p.push("isolated on white background, die-cut sticker, centered");
+            }
+
+            if (tags) p.push(tags);
+            p.push("flat vector graphics, 2d, high quality");
+
+            let final = p.join(", ");
+
+            if (state.model === 'mj') {
+                let ar = state.ratio === 'square' ? '1:1' : (state.ratio === 'portrait' ? '2:3' : '3:2');
+                final += ` --ar ${ar} --no shading, 3d, realistic, photo, gradient, shadow`;
+            } 
+            else if (state.model === 'ideo') {
+                final += ", typography, poster design, vibrant colors";
+            }
+            else {
+                if (state.ratio === 'portrait') final += ", vertical orientation";
+                if (state.ratio === 'landscape') final += ", wide orientation";
+                final += " [Negative: 3d, realistic, shading, shadow, photo]";
+            }
+
+            document.getElementById('finalOutput').value = final;
+            document.getElementById('charCount').innerText = final.length;
+        }
+
+        document.getElementById('coreSubject').addEventListener('input', generatePrompt);
+        document.getElementById('textSubject').addEventListener('input', generatePrompt);
+        
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const output = document.getElementById('finalOutput');
+            if(!output.value) return;
+            output.select(); document.execCommand('copy');
+            
+            const btn = document.getElementById('copyBtn');
+            const original = btn.innerHTML;
+            btn.innerHTML = `<i class="ph-bold ph-check text-2xl text-white"></i>`;
+            btn.classList.remove('bg-cyan-600');
+            btn.classList.add('bg-green-600');
+            
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.classList.remove('bg-green-600');
+                btn.classList.add('bg-cyan-600');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
