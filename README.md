@@ -7,7 +7,7 @@
 
 **VectorGen** is a professional-grade AI prompt architect...
 
-It features a **Sci-Fi Tactical UI** inspired by Arknights and Genshin Impact, providing a visually immersive experience while generating optimized prompts for Midjourney, Ideogram, Leonardo, and Flux.
+It features a **Sci-Fi Tactical UI** inspired by Sci-Fi Tactical game, providing a visually immersive experience while generating optimized prompts for Midjourney, Ideogram, Leonardo, and Flux.
 
 ---
 
